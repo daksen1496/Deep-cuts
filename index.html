@@ -1,0 +1,179 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#111110">
+<meta name="description" content="Archivo personal de digging para samplear.">
+<link rel="manifest" href="manifest.json">
+<link rel="icon" href="icons/icon-192.png">
+<title>DEEP CUTS — Sample Archive</title>
+<style>
+:root{color-scheme:dark;--bg:#111110;--panel:#1b1b19;--panel2:#242421;--line:#373731;--ink:#f0ede5;--muted:#a6a397;--accent:#dfcfad;--red:#d86c5d}
+*{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--ink);font:15px/1.45 system-ui,-apple-system,Segoe UI,sans-serif}
+button,input,textarea,select{font:inherit}button{cursor:pointer}
+.app{max-width:760px;margin:auto;padding:env(safe-area-inset-top) 16px calc(24px + env(safe-area-inset-bottom))}
+header{display:flex;align-items:center;gap:12px;padding:20px 0 17px;border-bottom:1px solid var(--line)}
+.logo{width:46px;height:46px;background:var(--accent);color:#171714;border-radius:12px;display:grid;place-items:center;font-size:24px}
+.brand{flex:1}.brand h1{font-size:20px;letter-spacing:2.8px;margin:0;font-weight:850}.brand p{margin:2px 0 0;color:var(--muted);font-size:10px;letter-spacing:1.7px}
+.pill{border:1px solid var(--line);border-radius:99px;padding:6px 9px;color:var(--muted);font-size:11px}
+nav{display:grid;grid-template-columns:repeat(3,1fr);gap:7px;margin:17px 0}
+nav button{background:transparent;border:1px solid var(--line);color:var(--muted);padding:10px 6px;border-radius:10px}
+nav button.active{background:var(--accent);border-color:var(--accent);color:#171714;font-weight:700}
+h2{font-size:17px;margin:19px 0 10px} .sub{color:var(--muted);font-size:13px;margin-top:-4px}
+.panel{background:var(--panel);border:1px solid var(--line);border-radius:16px;padding:14px;margin:12px 0}
+label{display:block;color:var(--muted);font-size:12px;margin:11px 0 6px}
+input,textarea,select{width:100%;background:#121211;border:1px solid var(--line);color:var(--ink);border-radius:10px;padding:12px;outline:none}
+input:focus,textarea:focus{border-color:var(--accent)}textarea{min-height:68px;resize:vertical}
+button.primary{background:var(--accent);border:0;color:#191916;font-weight:750;border-radius:10px;padding:12px 14px}
+button.secondary{background:var(--panel2);border:1px solid var(--line);color:var(--ink);border-radius:10px;padding:10px 12px}
+button.danger{background:transparent;border:1px solid #6d3934;color:#f09a8e;border-radius:10px;padding:8px 10px}
+.actions{display:flex;gap:8px;flex-wrap:wrap;margin-top:12px}.actions button{flex:1}
+#playerWrap{display:none;margin-top:13px;overflow:hidden;border-radius:12px;background:#000;aspect-ratio:16/9}
+#playerWrap iframe{width:100%;height:100%;border:0}
+.item{background:var(--panel);border:1px solid var(--line);border-radius:14px;padding:13px;margin:10px 0}
+.itemtop{display:flex;gap:10px;align-items:flex-start}.itemtitle{font-weight:700;flex:1;overflow-wrap:anywhere}.item small{color:var(--muted)}
+.tag{display:inline-block;border:1px solid #555348;border-radius:6px;padding:3px 6px;margin:7px 4px 0 0;font-size:10px;color:var(--accent);letter-spacing:.5px}
+.itemnotes{font-size:13px;color:#c6c2b7;white-space:pre-wrap;margin-top:8px}
+.empty{padding:24px 12px;text-align:center;color:var(--muted);border:1px dashed var(--line);border-radius:12px}
+.hidden{display:none!important}.tiny{font-size:11px;color:var(--muted)}footer{padding:18px 0 4px;text-align:center;color:#77766e;font-size:11px}
+@media(min-width:600px){.app{padding-left:24px;padding-right:24px}.formgrid{display:grid;grid-template-columns:1fr 1fr;gap:0 12px}}
+</style>
+</head>
+<body>
+<div class="app">
+<header>
+  <div class="logo">◉</div>
+  <div class="brand"><h1>DEEP CUTS</h1><p>SAMPLE ARCHIVE · PERSONAL DIGGING</p></div>
+  <span class="pill">LOCAL LIBRARY</span>
+</header>
+<nav aria-label="Secciones">
+  <button class="active" data-tab="digging">＋ Digging</button>
+  <button data-tab="archive">▤ Archivo <span id="archiveCount">0</span></button>
+  <button data-tab="favorites">★ Favoritos <span id="favCount">0</span></button>
+</nav>
+
+<section id="digging">
+  <h2>Encontrar una fuente</h2>
+  <p class="sub">Pega un enlace de YouTube para escuchar la fuente y guardarla en tu archivo.</p>
+  <div class="panel">
+    <label for="url">Enlace de YouTube</label>
+    <input id="url" inputmode="url" placeholder="https://www.youtube.com/watch?v=…" autocomplete="off">
+    <div class="actions"><button class="primary" id="openBtn">Abrir fuente</button><button class="secondary" id="saveBtn">Guardar en archivo</button></div>
+    <div id="playerWrap"></div>
+    <p class="tiny">La reproducción usa el reproductor oficial de YouTube. Esta app no descarga ni extrae audio del vídeo.</p>
+    <div class="formgrid">
+      <div><label for="title">Título / nombre de la fuente</label><input id="title" placeholder="Ej. Occulto — parte de piano"></div>
+      <div><label for="tags">Etiquetas (separadas por coma)</label><input id="tags" placeholder="DARK, DRUMLESS, PIANO"></div>
+    </div>
+    <label for="notes">Notas de digging</label>
+    <textarea id="notes" placeholder="Minuto aproximado, instrumento, textura, idea de chop…"></textarea>
+  </div>
+  <div class="panel">
+    <h2 style="margin-top:0">Tu método</h2>
+    <p class="sub">Guarda ideas rápido. Después podrás filtrar tu archivo por etiquetas y marcar los hallazgos favoritos.</p>
+    <div class="tiny">Consejo de organización: usa etiquetas cortas y consistentes, por ejemplo DARK · DRUMLESS · SOUL · GOSPEL · PIANO · STRINGS.</div>
+  </div>
+</section>
+
+<section id="archive" class="hidden">
+  <h2>Archivo de fuentes</h2>
+  <input id="search" placeholder="Buscar título, etiqueta o nota…">
+  <div id="archiveList"></div>
+</section>
+
+<section id="favorites" class="hidden">
+  <h2>Favoritos</h2>
+  <p class="sub">Fuentes que vale la pena volver a escuchar.</p>
+  <div id="favoriteList"></div>
+</section>
+
+<footer>DEEP CUTS · Tus notas se guardan en este dispositivo.</footer>
+</div>
+<script>
+const KEY='deepcuts.archive.v1';
+let entries=[];
+try{entries=JSON.parse(localStorage.getItem(KEY)||'[]')}catch(e){entries=[]}
+const $=id=>document.getElementById(id);
+function persist(){localStorage.setItem(KEY,JSON.stringify(entries));render()}
+function getVideoId(raw){
+  try{
+    const u=new URL(raw.trim());
+    if(u.hostname==='youtu.be'||u.hostname.endsWith('.youtu.be')) return u.pathname.split('/').filter(Boolean)[0]||null;
+    if(u.hostname.includes('youtube.com')||u.hostname.includes('youtube-nocookie.com')){
+      if(u.searchParams.get('v')) return u.searchParams.get('v');
+      const p=u.pathname.split('/').filter(Boolean);
+      if(['embed','shorts','live','v'].includes(p[0])) return p[1]||null;
+    }
+  }catch(e){}
+  return null;
+}
+function currentUrl(){return $('url').value.trim()}
+function openSource(){
+  const id=getVideoId(currentUrl());
+  if(!id){alert('Pega un enlace válido de YouTube (vídeo, Shorts o youtu.be).');return}
+  $('playerWrap').style.display='block';
+  $('playerWrap').innerHTML='<iframe title="Reproductor oficial de YouTube" src="https://www.youtube-nocookie.com/embed/'+encodeURIComponent(id)+'?playsinline=1&rel=0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>';
+  if(!$('title').value.trim()) $('title').value='Fuente de YouTube';
+}
+function saveEntry(){
+  const url=currentUrl(), id=getVideoId(url);
+  if(!id){alert('Primero pega un enlace válido de YouTube.');return}
+  const existing=entries.find(e=>e.videoId===id);
+  if(existing){
+    existing.title=$('title').value.trim()||existing.title;
+    existing.tags=parseTags($('tags').value).length?parseTags($('tags').value):existing.tags;
+    existing.notes=$('notes').value.trim()||existing.notes;
+    existing.url='https://www.youtube.com/watch?v='+id;
+    existing.updated=Date.now(); existing.lastOpened=Date.now();
+    alert('Fuente actualizada en tu archivo.');
+  }else{
+    entries.unshift({id:crypto.randomUUID?crypto.randomUUID():String(Date.now()),videoId:id,url:'https://www.youtube.com/watch?v='+id,title:$('title').value.trim()||'Fuente sin título',tags:parseTags($('tags').value),notes:$('notes').value.trim(),favorite:false,created:Date.now(),lastOpened:Date.now()});
+  }
+  persist();
+}
+function parseTags(s){return [...new Set(s.split(',').map(t=>t.trim().toUpperCase()).filter(Boolean))]}
+function esc(s){return String(s||'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]))}
+function fmt(ts){return new Date(ts||Date.now()).toLocaleDateString('es-CL',{day:'2-digit',month:'short',year:'numeric'})}
+function itemHtml(e){
+ return '<article class="item"><div class="itemtop"><div class="itemtitle">'+esc(e.title)+'</div><button class="secondary" data-action="fav" data-id="'+e.id+'" aria-label="Favorito">'+(e.favorite?'★':'☆')+'</button></div>'+
+ '<small>Guardado '+fmt(e.created)+' · <a style="color:var(--accent)" href="'+esc(e.url)+'" target="_blank" rel="noopener">Abrir en YouTube ↗</a></small>'+
+ (e.tags?.length?'<div>'+e.tags.map(t=>'<span class="tag">'+esc(t)+'</span>').join('')+'</div>':'')+
+ (e.notes?'<div class="itemnotes">'+esc(e.notes)+'</div>':'')+
+ '<div class="actions"><button class="primary" data-action="load" data-id="'+e.id+'">Cargar en Digging</button><button class="secondary" data-action="edit" data-id="'+e.id+'">Editar</button><button class="danger" data-action="delete" data-id="'+e.id+'">Borrar</button></div></article>';
+}
+function render(){
+ $('archiveCount').textContent=entries.length;
+ $('favCount').textContent=entries.filter(e=>e.favorite).length;
+ const q=($('search').value||'').toLowerCase().trim();
+ const found=entries.filter(e=>(e.title+' '+(e.tags||[]).join(' ')+' '+e.notes).toLowerCase().includes(q));
+ $('archiveList').innerHTML=found.length?found.map(itemHtml).join(''):'<div class="empty">Todavía no hay fuentes guardadas.<br>Pega un enlace en Digging para empezar.</div>';
+ const favs=entries.filter(e=>e.favorite);
+ $('favoriteList').innerHTML=favs.length?favs.map(itemHtml).join(''):'<div class="empty">Tus favoritos aparecerán aquí.</div>';
+}
+function switchTab(tab){
+ document.querySelectorAll('nav button').forEach(b=>b.classList.toggle('active',b.dataset.tab===tab));
+ ['digging','archive','favorites'].forEach(id=>$(id).classList.toggle('hidden',id!==tab));
+ if(tab!=='digging')render();
+}
+document.querySelectorAll('nav button').forEach(b=>b.addEventListener('click',()=>switchTab(b.dataset.tab)));
+$('openBtn').addEventListener('click',openSource);$('saveBtn').addEventListener('click',saveEntry);$('search').addEventListener('input',render);
+document.body.addEventListener('click',ev=>{
+ const b=ev.target.closest('button[data-action]');if(!b)return;
+ const e=entries.find(x=>x.id===b.dataset.id);if(!e)return;
+ if(b.dataset.action==='fav'){e.favorite=!e.favorite;persist()}
+ if(b.dataset.action==='delete'){if(confirm('¿Borrar esta fuente del archivo?')){entries=entries.filter(x=>x.id!==e.id);persist()}}
+ if(b.dataset.action==='load'){
+  $('url').value=e.url;$('title').value=e.title;$('tags').value=(e.tags||[]).join(', ');$('notes').value=e.notes||'';
+  e.lastOpened=Date.now();persist();switchTab('digging');openSource();window.scrollTo({top:0,behavior:'smooth'});
+ }
+ if(b.dataset.action==='edit'){
+  $('url').value=e.url;$('title').value=e.title;$('tags').value=(e.tags||[]).join(', ');$('notes').value=e.notes||'';
+  switchTab('digging');window.scrollTo({top:0,behavior:'smooth'});
+ }
+});
+if('serviceWorker' in navigator && location.protocol.startsWith('http')) navigator.serviceWorker.register('./sw.js').catch(()=>{});
+render();
+</script>
+</body>
+</html>
